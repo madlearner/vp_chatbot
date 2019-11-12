@@ -9,9 +9,9 @@ all the packages required are mentioned in the requirements.txt
 ## steps
 
 install the app
-create a virtual environment(django=2.2.7, python = 3.6.3)
-activate the virtual environment
-run the application
+create a virtual environment(django=2.2.7, python = 3.6.3),
+activate the virtual environment,
+run the application and the application thruogh your localhost
 
 ## slack channel
 
