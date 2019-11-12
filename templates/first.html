@@ -1,0 +1,135 @@
+<html>
+<style>
+    h1{
+        text-align: center;
+        font-family: monospace;
+    }
+    #my_app_input{
+        text-align: center;
+        margin-right: auto;
+        margin-left: auto;
+        width: 40%;
+        margin-top: 60px;
+    }
+    #message_input{
+        width: 87%;
+        border: none;
+        border-bottom: 3px solid #33D7FF;
+        font-family: monospace;
+        font-size: 17px;
+    }
+    #send_input{
+        padding: 3px;
+        border-radius: 30%;
+        font-family: monospace;
+        font-size: 17px;
+    }
+    #conversation{
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        width: 40%;
+        height: 50%;
+        margin-top: 60px;
+        border:  3px solid #33D7FF;
+        overflow:auto;
+    }
+    .userText{
+        color: white;
+        padding-right: 10px; 
+        font-family: monospace;
+        font-size: 17px;
+        text-align: right;
+        line-height: 30px;
+    }
+    .userText span{
+        background-color: #009688;
+        padding: 10px;
+        border-radius: 2px;
+    }
+    .slackMesg{
+        color: white;
+        font-family: monospace;
+        font-size: 17px;
+        text-align: left;
+        padding-left: 10px;
+        line-height: 30px;
+    }
+    .slackMesg span{
+        background-color: #FFB533;
+        padding: 10px;
+        border-radius: 2px;
+    }
+
+</style>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chatbot Application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>    
+</head>
+<body>
+    <h1>Hey there! Your Friend is Waiting, Send a message!</h1><br/>
+    <div>
+        <div id="conversation" class="block content">
+            
+        </div>
+        <div id="my_app_input">
+            <input type="text" id="message_input" name="message_input" placeholder="Enter Your message">
+            <input type="submit" id="send_input" name="send_input" value="Send" onclick="sendtoSlack();">
+            <input type="hidden" name="received_mesg" id="received_mesg" value="">
+        </div>
+        <script>
+            //send message to conversation box
+            function textonConv(){
+                var inputText = $("#message_input").val();
+                var userHtml = '<p class="userText"><span>' + inputText + '</span></p>';
+                $("#message_input").val("");
+                $("#conversation").append(userHtml);
+                if($("#received_mesg").val().length != 0){
+                    var received_mesgs = $("#received_mesg").val();
+                    var slackMesg = '<p class = "slackMesg"><span style="color:blue;">@slack</span><br><span>+ received_mesgs+</span></p>';
+                    $("#conversation").append(slackMesg);
+                }
+                sendtoSlack();
+            }
+
+            //send message to slack channel
+            function sendtoSlack(){
+                var settings = {
+                    url: "https://hooks.slack.com/services/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",
+                    method: "POST",
+                    datatype: "application/x-www-form-urlencoded",
+                    data:{
+                        "payload": JSON.stringify({text: $("#message_input").val()})
+                    }
+                }
+                $.ajax(settings).done(function(response){
+                    console.log(response);
+                });
+            }
+
+            // function receivefromSlack(){
+            //     var receiveFrom = {
+            //         url: "https://hooks.slack.com/services/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",
+            //         method: "GET",
+            //         datatype: "application/x-www-form-urlencoded",
+            //         data: {
+            //             "payload": JSON.stringify({text: $("#message_input").val()})
+            //         }
+            //     }
+            // }
+
+            $("#message_input").keypress(function(e){
+                if(e.which == 13){
+                    sendtoSlack();
+                    textonConv();
+                }
+            });
+            $("#send_input").click(function(){
+                textonConv();
+            })
+        </script>
+    </div>
+</body>
+</html>
